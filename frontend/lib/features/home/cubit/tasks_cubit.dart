@@ -72,4 +72,27 @@ class TasksCubit extends Cubit<TasksState> {
       }
     }
   }
+
+  Future<void> deleteTask({
+    required String taskId,
+    required String token,
+  }) async {
+    try {
+      emit(TasksLoading());
+
+      final isDeleted =
+          await taskRemoteRepository.deleteTask(taskId: taskId, token: token);
+
+      if (isDeleted) {
+        await taskLocalRepository.deleteTask(taskId);
+        final tasks = await taskLocalRepository.getTask();
+        emit(GetTaskSuccess(tasks));
+      } else {
+        emit(TasksError("Failed to delete task"));
+      }
+    } catch (e) {
+      print(e);
+      emit(TasksError(e.toString()));
+    }
+  }
 }

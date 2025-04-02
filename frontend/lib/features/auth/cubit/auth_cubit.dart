@@ -75,4 +75,18 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError(e.toString()));
     }
   }
+
+  void logout() async {
+    try {
+      // Clear the saved token
+      await spService.removeToken();
+      // Clear user data from local repository
+      await authLocalRepository.clearUser();
+      // Emit the initial state (logged out)
+      emit(AuthInitial());
+    } catch (e) {
+      print("Logout error: $e");
+      emit(AuthError("Logout failed"));
+    }
+  }
 }

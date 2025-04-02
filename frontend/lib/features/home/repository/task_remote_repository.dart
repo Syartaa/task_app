@@ -120,4 +120,27 @@ class TaskRemoteRepository {
       return false;
     }
   }
+
+  Future<bool> deleteTask(
+      {required String taskId, required String token}) async {
+    try {
+      final res = await http.delete(
+        Uri.parse("${Constants.backendUri}/tasks"),
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': token,
+        },
+        body: jsonEncode({"taskId": taskId}),
+      );
+
+      if (res.statusCode != 200) {
+        throw jsonDecode(res.body)['error'];
+      }
+
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

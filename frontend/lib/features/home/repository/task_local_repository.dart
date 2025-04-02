@@ -110,4 +110,9 @@ class TaskLocalRepository {
       whereArgs: [id],
     );
   }
+
+  Future<void> deleteTask(String taskId) async {
+    final db = await database;
+    await db.delete(tableName, where: 'id = ?', whereArgs: [taskId]);
+  }
 }

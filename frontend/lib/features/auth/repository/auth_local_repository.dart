@@ -68,4 +68,9 @@ class AuthLocalRepository {
     }
     return null;
   }
+
+  Future<void> clearUser() async {
+    final db = await database;
+    await db.delete(tableName); // Delete all user data
+  }
 }
